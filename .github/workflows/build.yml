@@ -1,0 +1,26 @@
+name: Construir
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Compilar y analizar
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Los clones superficiales deben estar deshabilitados para una mejor relevancia del análisis
+      - uses: sonarsource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      # Si desea que su trabajo falle cuando la Puerta de calidad esté en rojo, descomente las
+      # siguientes líneas. Esto normalmente se usaría para hacer que falle una implementación.
+      # - uses: sonarsource/sonarqube-quality-gate-action@master
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
